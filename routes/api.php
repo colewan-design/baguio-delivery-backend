@@ -66,6 +66,7 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/orders/{order}/reassign-rider', [AdminOrderController::class, 'reassignRider']);
 
         Route::get('/riders', [AdminRiderController::class, 'index']);
+        Route::post('/riders', [AdminRiderController::class, 'store']);
 
         Route::get('/leads', [AdminLeadController::class, 'index']);
         Route::patch('/leads/{lead}', [AdminLeadController::class, 'update']);
