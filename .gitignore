@@ -21,3 +21,15 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Sibling projects in this monorepo, not part of this backend repo
+/web
+/mobile
+/UI reference images
+/web UI reference
+/design.md
+/plan.md
+/web-design.md
+/web-plan.md
+/.agents
+/.claude
