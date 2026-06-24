@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\LeadController as AdminLeadController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\RiderController as AdminRiderController;
 use App\Http\Controllers\Api\Admin\VendorController as AdminVendorController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Api\Customer\VendorController as CustomerVendorController;
+use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\Rider\RiderController;
 use App\Http\Controllers\Api\Vendor\MenuItemController;
 use App\Http\Controllers\Api\Vendor\OrderController as VendorOrderController;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/leads', [LeadController::class, 'store']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
@@ -63,5 +66,8 @@ Route::middleware('auth:sanctum')->group(function () {
         Route::patch('/orders/{order}/reassign-rider', [AdminOrderController::class, 'reassignRider']);
 
         Route::get('/riders', [AdminRiderController::class, 'index']);
+
+        Route::get('/leads', [AdminLeadController::class, 'index']);
+        Route::patch('/leads/{lead}', [AdminLeadController::class, 'update']);
     });
 });

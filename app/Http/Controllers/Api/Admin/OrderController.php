@@ -11,7 +11,7 @@ class OrderController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Order::query()->with(['customer', 'vendor', 'rider', 'items.menuItem']);
+        $query = Order::query()->with(['customer', 'vendor', 'rider.user', 'items.menuItem']);
 
         if ($status = $request->query('status')) {
             $query->where('status', $status);
@@ -23,7 +23,7 @@ class OrderController extends Controller
     public function show(Order $order)
     {
         return response()->json(
-            $order->load(['customer', 'vendor', 'rider', 'items.menuItem', 'statusLogs'])
+            $order->load(['customer', 'vendor', 'rider.user', 'items.menuItem', 'statusLogs'])
         );
     }
 
