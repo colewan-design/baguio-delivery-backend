@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\Admin\LeadController as AdminLeadController;
 use App\Http\Controllers\Api\Admin\OrderController as AdminOrderController;
 use App\Http\Controllers\Api\Admin\RiderController as AdminRiderController;
 use App\Http\Controllers\Api\Admin\VendorController as AdminVendorController;
+use App\Http\Controllers\Api\ActivationController;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Api\Customer\VendorController as CustomerVendorController;
@@ -17,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/leads', [LeadController::class, 'store']);
+Route::post('/activate/{user}', [ActivationController::class, 'store'])
+    ->name('activation.complete')
+    ->middleware('signed');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);

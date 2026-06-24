@@ -8,6 +8,7 @@ class Rider extends Model
 {
     protected $fillable = [
         'user_id',
+        'lead_id',
         'current_lat',
         'current_lng',
         'status',
@@ -25,6 +26,11 @@ class Rider extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
     }
 
     public function orders()

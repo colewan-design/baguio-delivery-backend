@@ -8,6 +8,7 @@ class Vendor extends Model
 {
     protected $fillable = [
         'user_id',
+        'lead_id',
         'business_name',
         'address',
         'lat',
@@ -32,6 +33,11 @@ class Vendor extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function lead()
+    {
+        return $this->belongsTo(Lead::class);
     }
 
     public function menuItems()

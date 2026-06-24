@@ -3,11 +3,16 @@
 namespace App\Http\Controllers\Api\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Mail\AccountActivationMail;
+use App\Models\Lead;
 use App\Models\Rider;
 use App\Models\User;
+use App\Support\ActivationLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class RiderController extends Controller
 {
@@ -28,8 +33,8 @@ class RiderController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:users,email'],
             'phone' => ['required', 'string', 'unique:users,phone'],
-            'password' => ['required', 'string', 'min:8'],
             'vehicle_type' => ['nullable', 'string', 'max:255'],
+            'lead_id' => ['nullable', 'exists:leads,id'],
         ]);
 
         $rider = DB::transaction(function () use ($data) {
@@ -37,16 +42,27 @@ class RiderController extends Controller
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'phone' => $data['phone'],
-                'password' => Hash::make($data['password']),
+                'password' => Hash::make(Str::random(40)),
                 'role' => 'rider',
             ]);
 
-            return Rider::create([
+            $rider = Rider::create([
                 'user_id' => $user->id,
+                'lead_id' => $data['lead_id'] ?? null,
                 'vehicle_type' => $data['vehicle_type'] ?? null,
                 'status' => 'offline',
             ]);
+
+            if (! empty($data['lead_id'])) {
+                Lead::whereKey($data['lead_id'])->update(['status' => 'converted']);
+            }
+
+            return $rider;
         });
+
+        Mail::to($rider->user->email)->send(
+            new AccountActivationMail($rider->user, ActivationLink::for($rider->user), 'rider')
+        );
 
         return response()->json($rider->load('user'), 201);
     }
