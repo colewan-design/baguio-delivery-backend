@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Events\OrderStatusUpdated;
 use App\Models\Order;
 use App\Models\Rider;
 use App\Models\User;
@@ -60,8 +61,6 @@ class OrderLifecycleService
         return $this->transitionTo($order, 'cancelled', $changedBy);
     }
 
-    // No broadcast() call here — clients subscribe to Supabase Realtime
-    // Postgres Changes on `orders`/`order_status_logs` directly.
     public function transitionTo(Order $order, string $status, User $changedBy): Order
     {
         $allowed = self::TRANSITIONS[$order->status] ?? [];
@@ -78,6 +77,8 @@ class OrderLifecycleService
             'status' => $status,
             'changed_by' => $changedBy->id,
         ]);
+
+        OrderStatusUpdated::dispatch($order);
 
         return $order;
     }

@@ -5,17 +5,12 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Rider;
 use App\Models\User;
-use App\Services\SupabaseRealtimeTokenService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
 {
-    public function __construct(private SupabaseRealtimeTokenService $realtimeTokens)
-    {
-    }
-
     public function register(Request $request)
     {
         $data = $request->validate([
@@ -48,7 +43,6 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user,
             'token' => $token,
-            'realtime_token' => $this->realtimeTokens->issueFor($user),
         ], 201);
     }
 
@@ -70,7 +64,6 @@ class AuthController extends Controller
         return response()->json([
             'user' => $user,
             'token' => $token,
-            'realtime_token' => $this->realtimeTokens->issueFor($user),
         ]);
     }
 
@@ -84,12 +77,5 @@ class AuthController extends Controller
     public function me(Request $request)
     {
         return response()->json($request->user());
-    }
-
-    public function realtimeToken(Request $request)
-    {
-        return response()->json([
-            'realtime_token' => $this->realtimeTokens->issueFor($request->user()),
-        ]);
     }
 }
