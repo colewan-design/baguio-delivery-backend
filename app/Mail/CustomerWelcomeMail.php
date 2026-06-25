@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
@@ -16,14 +15,14 @@ class CustomerWelcomeMail extends Mailable
 
     public function __construct(
         public User $user,
-        public string $verificationUrl,
+        public string $otp,
     ) {
     }
 
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Welcome to '.config('app.name').' — confirm your email',
+            subject: 'Your '.config('app.name').' verification code',
         );
     }
 

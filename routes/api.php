@@ -6,10 +6,10 @@ use App\Http\Controllers\Api\Admin\RiderController as AdminRiderController;
 use App\Http\Controllers\Api\Admin\VendorController as AdminVendorController;
 use App\Http\Controllers\Api\ActivationController;
 use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Api\Customer\VendorController as CustomerVendorController;
 use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\OtpController;
 use App\Http\Controllers\Api\Rider\RegistrationController as RiderRegistrationController;
 use App\Http\Controllers\Api\Rider\RiderController;
 use App\Http\Controllers\Api\Vendor\MenuItemController;
@@ -26,13 +26,12 @@ Route::post('/riders/register', [RiderRegistrationController::class, 'store']);
 Route::post('/activate/{user}', [ActivationController::class, 'store'])
     ->name('activation.complete')
     ->middleware('signed');
-Route::post('/verify-email/{user}', [EmailVerificationController::class, 'store'])
-    ->name('verification.complete')
-    ->middleware('signed');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/user', [AuthController::class, 'me']);
+    Route::post('/otp/verify', [OtpController::class, 'verify']);
+    Route::post('/otp/resend', [OtpController::class, 'resend']);
 
     // Customer
     Route::middleware('role:customer')->group(function () {

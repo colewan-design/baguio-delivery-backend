@@ -3,13 +3,13 @@
 
 Hi {{ $user->name }},
 
-Thanks for signing up! Please confirm your email address to finish setting up your account.
+Use the code below to verify your account. It expires in 10 minutes.
 
-<x-mail::button :url="$verificationUrl">
-Confirm Email
-</x-mail::button>
+<x-mail::panel>
+# {{ $otp }}
+</x-mail::panel>
 
-This link expires in 7 days. If you didn't create this account, you can ignore this email.
+If you didn't create this account, you can ignore this email.
 
 Thanks,<br>
 {{ config('app.name') }}

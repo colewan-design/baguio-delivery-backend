@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Mail\CustomerWelcomeMail;
 use App\Models\Rider;
 use App\Models\User;
-use App\Support\VerificationLink;
+use App\Support\Otp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
@@ -44,10 +44,10 @@ class AuthController extends Controller
         }
 
         if ($data['role'] === 'customer') {
+            $code = Otp::issueFor($user);
+
             try {
-                Mail::to($user->email)->send(
-                    new CustomerWelcomeMail($user, VerificationLink::for($user))
-                );
+                Mail::to($user->email)->send(new CustomerWelcomeMail($user, $code));
             } catch (Throwable $e) {
                 Log::error('Failed to send customer welcome email.', ['user_id' => $user->id, 'error' => $e->getMessage()]);
             }
