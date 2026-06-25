@@ -10,6 +10,7 @@ use App\Http\Controllers\Api\Customer\OrderController as CustomerOrderController
 use App\Http\Controllers\Api\Customer\VendorController as CustomerVendorController;
 use App\Http\Controllers\Api\LeadController;
 use App\Http\Controllers\Api\OtpController;
+use App\Http\Controllers\Api\PlaceController;
 use App\Http\Controllers\Api\Rider\RegistrationController as RiderRegistrationController;
 use App\Http\Controllers\Api\Rider\RiderController;
 use App\Http\Controllers\Api\Vendor\MenuItemController;
@@ -23,6 +24,7 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/leads', [LeadController::class, 'store']);
 Route::post('/vendors/register', [VendorRegistrationController::class, 'store']);
 Route::post('/riders/register', [RiderRegistrationController::class, 'store']);
+Route::get('/places/search', [PlaceController::class, 'search']);
 Route::post('/activate/{user}', [ActivationController::class, 'store'])
     ->name('activation.complete')
     ->middleware('signed');
