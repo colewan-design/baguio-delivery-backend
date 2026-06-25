@@ -9,15 +9,19 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Api\Customer\VendorController as CustomerVendorController;
 use App\Http\Controllers\Api\LeadController;
+use App\Http\Controllers\Api\Rider\RegistrationController as RiderRegistrationController;
 use App\Http\Controllers\Api\Rider\RiderController;
 use App\Http\Controllers\Api\Vendor\MenuItemController;
 use App\Http\Controllers\Api\Vendor\OrderController as VendorOrderController;
+use App\Http\Controllers\Api\Vendor\RegistrationController as VendorRegistrationController;
 use App\Http\Controllers\Api\Vendor\VendorProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::post('/register', [AuthController::class, 'register']);
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/leads', [LeadController::class, 'store']);
+Route::post('/vendors/register', [VendorRegistrationController::class, 'store']);
+Route::post('/riders/register', [RiderRegistrationController::class, 'store']);
 Route::post('/activate/{user}', [ActivationController::class, 'store'])
     ->name('activation.complete')
     ->middleware('signed');
