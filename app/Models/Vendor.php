@@ -10,6 +10,7 @@ class Vendor extends Model
         'user_id',
         'lead_id',
         'business_name',
+        'category',
         'address',
         'lat',
         'lng',

@@ -33,6 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // Customer
     Route::middleware('role:customer')->group(function () {
         Route::get('/vendors', [CustomerVendorController::class, 'index']);
+        Route::get('/vendors/{vendor}', [CustomerVendorController::class, 'show']);
         Route::get('/vendors/{vendor}/menu', [CustomerVendorController::class, 'menu']);
         Route::get('/orders', [CustomerOrderController::class, 'index']);
         Route::post('/orders', [CustomerOrderController::class, 'store']);

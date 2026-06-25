@@ -35,6 +35,7 @@ class VendorController extends Controller
             'email' => ['required', 'email', 'unique:users,email'],
             'phone' => ['required', 'string', 'unique:users,phone'],
             'business_name' => ['required', 'string', 'max:255'],
+            'category' => ['required', Rule::in(['food', 'groceries', 'pharmacy', 'errands'])],
             'address' => ['required', 'string'],
             'lat' => ['required', 'numeric'],
             'lng' => ['required', 'numeric'],
@@ -58,6 +59,7 @@ class VendorController extends Controller
                 'user_id' => $user->id,
                 'lead_id' => $data['lead_id'] ?? null,
                 'business_name' => $data['business_name'],
+                'category' => $data['category'],
                 'address' => $data['address'],
                 'lat' => $data['lat'],
                 'lng' => $data['lng'],
@@ -85,7 +87,8 @@ class VendorController extends Controller
     public function update(Request $request, Vendor $vendor)
     {
         $data = $request->validate([
-            'status' => ['required', Rule::in(['pending', 'approved', 'suspended'])],
+            'status' => ['sometimes', 'required', Rule::in(['pending', 'approved', 'suspended'])],
+            'category' => ['sometimes', 'required', Rule::in(['food', 'groceries', 'pharmacy', 'errands'])],
         ]);
 
         $vendor->update($data);

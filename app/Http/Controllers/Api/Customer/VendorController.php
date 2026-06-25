@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Vendor;
 use App\Services\DistanceService;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class VendorController extends Controller
 {
@@ -14,6 +15,7 @@ class VendorController extends Controller
         $request->validate([
             'lat' => ['required', 'numeric'],
             'lng' => ['required', 'numeric'],
+            'category' => ['sometimes', Rule::in(['food', 'groceries', 'pharmacy', 'errands'])],
         ]);
 
         $lat = (float) $request->query('lat');
@@ -22,6 +24,7 @@ class VendorController extends Controller
         $vendors = Vendor::query()
             ->where('status', 'approved')
             ->where('is_open', true)
+            ->when($request->query('category'), fn ($query, $category) => $query->where('category', $category))
             ->get()
             ->map(function (Vendor $vendor) use ($lat, $lng) {
                 $vendor->distance_km = round(DistanceService::haversineKm(
@@ -37,6 +40,13 @@ class VendorController extends Controller
             ->values();
 
         return response()->json($vendors);
+    }
+
+    public function show(Vendor $vendor)
+    {
+        abort_unless($vendor->status === 'approved', 404);
+
+        return response()->json($vendor);
     }
 
     public function menu(Vendor $vendor)

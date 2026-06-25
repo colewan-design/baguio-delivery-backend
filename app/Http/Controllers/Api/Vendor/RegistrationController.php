@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 
 class RegistrationController extends Controller
 {
@@ -22,6 +23,7 @@ class RegistrationController extends Controller
             'email' => ['required', 'email', 'unique:users,email'],
             'phone' => ['required', 'string', 'unique:users,phone'],
             'business_name' => ['required', 'string', 'max:255'],
+            'category' => ['required', Rule::in(['food', 'groceries', 'pharmacy', 'errands'])],
             'address' => ['required', 'string'],
             'lat' => ['required', 'numeric'],
             'lng' => ['required', 'numeric'],
@@ -40,6 +42,7 @@ class RegistrationController extends Controller
             return Vendor::create([
                 'user_id' => $user->id,
                 'business_name' => $data['business_name'],
+                'category' => $data['category'],
                 'address' => $data['address'],
                 'lat' => $data['lat'],
                 'lng' => $data['lng'],
