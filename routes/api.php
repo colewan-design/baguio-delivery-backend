@@ -54,7 +54,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         Route::get('/menu', [MenuItemController::class, 'index']);
         Route::post('/menu', [MenuItemController::class, 'store']);
-        Route::patch('/menu/{menuItem}', [MenuItemController::class, 'update']);
+        Route::match(['POST', 'PATCH'], '/menu/{menuItem}', [MenuItemController::class, 'update']);
         Route::delete('/menu/{menuItem}', [MenuItemController::class, 'destroy']);
 
         Route::patch('/status', [VendorProfileController::class, 'update']);
