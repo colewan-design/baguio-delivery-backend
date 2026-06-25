@@ -9,8 +9,10 @@ use App\Models\User;
 use App\Support\VerificationLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Throwable;
 
 class AuthController extends Controller
 {
@@ -42,9 +44,13 @@ class AuthController extends Controller
         }
 
         if ($data['role'] === 'customer') {
-            Mail::to($user->email)->send(
-                new CustomerWelcomeMail($user, VerificationLink::for($user))
-            );
+            try {
+                Mail::to($user->email)->send(
+                    new CustomerWelcomeMail($user, VerificationLink::for($user))
+                );
+            } catch (Throwable $e) {
+                Log::error('Failed to send customer welcome email.', ['user_id' => $user->id, 'error' => $e->getMessage()]);
+            }
         }
 
         $token = $user->createToken('mobile')->plainTextToken;
