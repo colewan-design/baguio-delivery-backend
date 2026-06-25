@@ -19,10 +19,10 @@ class ActivationController extends Controller
             'password' => ['required', 'string', 'min:8', 'confirmed'],
         ]);
 
-        $user->update([
+        $user->forceFill([
             'password' => Hash::make($data['password']),
             'email_verified_at' => now(),
-        ]);
+        ])->save();
 
         return response()->json(['message' => 'Account activated. You can now log in.']);
     }

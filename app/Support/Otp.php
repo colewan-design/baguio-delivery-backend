@@ -11,10 +11,10 @@ class Otp
     {
         $code = (string) random_int(100000, 999999);
 
-        $user->update([
+        $user->forceFill([
             'otp_code' => Hash::make($code),
             'otp_expires_at' => now()->addMinutes(10),
-        ]);
+        ])->save();
 
         return $code;
     }
@@ -29,11 +29,11 @@ class Otp
             return false;
         }
 
-        $user->update([
+        $user->forceFill([
             'email_verified_at' => now(),
             'otp_code' => null,
             'otp_expires_at' => null,
-        ]);
+        ])->save();
 
         return true;
     }
