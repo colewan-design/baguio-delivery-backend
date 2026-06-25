@@ -16,6 +16,10 @@ class MenuItemController extends Controller
 
     public function store(Request $request)
     {
+        if ($request->has('is_available')) {
+            $request->merge(['is_available' => filter_var($request->is_available, FILTER_VALIDATE_BOOLEAN)]);
+        }
+
         $data = $request->validate([
             'name'        => ['required', 'string', 'max:255'],
             'description' => ['nullable', 'string'],
@@ -40,6 +44,10 @@ class MenuItemController extends Controller
     public function update(Request $request, MenuItem $menuItem)
     {
         abort_unless($menuItem->vendor_id === $request->user()->vendor->id, 403);
+
+        if ($request->has('is_available')) {
+            $request->merge(['is_available' => filter_var($request->is_available, FILTER_VALIDATE_BOOLEAN)]);
+        }
 
         $data = $request->validate([
             'name'        => ['sometimes', 'string', 'max:255'],
