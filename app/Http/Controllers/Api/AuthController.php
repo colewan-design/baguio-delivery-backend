@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Mail\CustomerWelcomeMail;
 use App\Models\Rider;
 use App\Models\User;
+use App\Support\VerificationLink;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 
 class AuthController extends Controller
@@ -36,6 +39,12 @@ class AuthController extends Controller
                 'vehicle_type' => $data['vehicle_type'] ?? null,
                 'status' => 'offline',
             ]);
+        }
+
+        if ($data['role'] === 'customer') {
+            Mail::to($user->email)->send(
+                new CustomerWelcomeMail($user, VerificationLink::for($user))
+            );
         }
 
         $token = $user->createToken('mobile')->plainTextToken;

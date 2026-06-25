@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\Admin\RiderController as AdminRiderController;
 use App\Http\Controllers\Api\Admin\VendorController as AdminVendorController;
 use App\Http\Controllers\Api\ActivationController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\EmailVerificationController;
 use App\Http\Controllers\Api\Customer\OrderController as CustomerOrderController;
 use App\Http\Controllers\Api\Customer\VendorController as CustomerVendorController;
 use App\Http\Controllers\Api\LeadController;
@@ -24,6 +25,9 @@ Route::post('/vendors/register', [VendorRegistrationController::class, 'store'])
 Route::post('/riders/register', [RiderRegistrationController::class, 'store']);
 Route::post('/activate/{user}', [ActivationController::class, 'store'])
     ->name('activation.complete')
+    ->middleware('signed');
+Route::post('/verify-email/{user}', [EmailVerificationController::class, 'store'])
+    ->name('verification.complete')
     ->middleware('signed');
 
 Route::middleware('auth:sanctum')->group(function () {
