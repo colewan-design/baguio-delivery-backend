@@ -27,7 +27,7 @@ Route::post('/riders/register', [RiderRegistrationController::class, 'store']);
 Route::get('/places/search', [PlaceController::class, 'search']);
 Route::post('/activate/{user}', [ActivationController::class, 'store'])
     ->name('activation.complete')
-    ->middleware('signed');
+    ->middleware('signed:relative');
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
